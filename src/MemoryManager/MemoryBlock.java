@@ -7,6 +7,7 @@ public class MemoryBlock {
     private int initialAdress;
     private int finalAdress;
     private int usedMemory;
+    private int blockSize;
     private boolean isAllocated;
 
     public MemoryBlock(int id, int initialAdress, int size) {
@@ -14,6 +15,7 @@ public class MemoryBlock {
         this.initialAdress = initialAdress;
         this.finalAdress = initialAdress + size;
         this.usedMemory = size;
+        this.blockSize = size;
     }
 
     public void setAllocated(boolean allocated) {
@@ -42,5 +44,20 @@ public class MemoryBlock {
 
     public int getUnusedMemory(){
         return (finalAdress - initialAdress) - usedMemory;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        String blockID = "livre";
+        if (isAllocated){
+            blockID = "bloco " + Integer.toString(id);
+
+        }
+        return initialAdress + " - " + finalAdress +
+               " " + blockID + "(tamanho " + blockSize + ")";
     }
 }

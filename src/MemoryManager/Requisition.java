@@ -2,12 +2,13 @@ package MemoryManager;
 
 public class Requisition {
 
-    int requisitionID;
-    String type;
-    int memoryRequired;
-    int memoryBlock;
+    private int requisitionID;
+    private String type;
+    private int memoryRequired;
+    private int memoryBlock;
 
-    public Requisition(String type, int data) {
+    public Requisition(int id, String type, int data) {
+        this.requisitionID = id;
         this.type = type;
 
         switch (this.type){
@@ -30,5 +31,17 @@ public class Requisition {
                 ", memoryRequired=" + memoryRequired +
                 ", memoryBlock=" + memoryBlock +
                 '}';
+    }
+
+    public int getMemoryBlock() {
+        return memoryBlock;
+    }
+
+    public int getMemoryRequired() {
+        return memoryRequired;
+    }
+
+    public String getType() {
+        return type;
     }
 }

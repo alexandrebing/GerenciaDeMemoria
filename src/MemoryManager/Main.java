@@ -36,15 +36,18 @@ public class Main {
 
         String line;
 
+        int counter = 0;
+
         while ((line = in.readLine()) != null){
 
             String data [] = line.split(" ");
 
-            Requisition r = new Requisition(data[0], Integer.parseInt(data[1]));
+            Requisition r = new Requisition( counter ,data[0], Integer.parseInt(data[1]));
 
             memoryAccessRequisitions.add(r);
 
             //System.out.println(r.toString());
+            counter += 1;
 
         }
 
