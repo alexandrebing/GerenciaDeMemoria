@@ -6,10 +6,12 @@ public class Requisition {
     private String type;
     private int memoryRequired;
     private int memoryBlock;
+    private boolean pending;
 
     public Requisition(int id, String type, int data) {
         this.requisitionID = id;
         this.type = type;
+        this.pending = false;
 
         switch (this.type){
             case "S":
@@ -43,5 +45,13 @@ public class Requisition {
 
     public String getType() {
         return type;
+    }
+
+    public void setPending(boolean pending) {
+        this.pending = pending;
+    }
+
+    public boolean isPending() {
+        return pending;
     }
 }

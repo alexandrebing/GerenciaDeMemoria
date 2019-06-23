@@ -4,13 +4,15 @@ import java.util.ArrayList;
 
 public class MemoryManager {
 
-    int mode;
-    int initialAdress;
-    int finalAdress;
+    private int mode;
+    private int initialAdress;
+    private int finalAdress;
 
-    ArrayList<MemoryBlock> memoryBlocks = new ArrayList<MemoryBlock>();
+    private ArrayList<MemoryBlock> memoryBlocks = new ArrayList<MemoryBlock>();
 
-    ArrayList<Requisition> requisitionsToMemory;
+    private ArrayList<Requisition> requisitionsToMemory;
+
+    private ArrayList<Requisition> pendingRequisitions = new ArrayList<Requisition>();
 
     public MemoryManager(int mode, int initialAdress, int finalAdress, ArrayList<Requisition> requisitionsToMemory) {
         this.mode = mode;
@@ -24,6 +26,8 @@ public class MemoryManager {
         for (Requisition requisition: requisitionsToMemory
              ) {
 
+            executePendingRequisitions();
+
             switch (requisition.getType()){
                 case "S":
                     requireMemory(requisition);
@@ -33,7 +37,18 @@ public class MemoryManager {
                     break;
             }
         }
+        printMemoryblocks(0);
 
+    }
+
+    private void executePendingRequisitions(){
+        if (!pendingRequisitions.isEmpty()){
+            for (Requisition req: pendingRequisitions
+                 ) {
+                requireMemory(req);
+            }
+
+        }
     }
 
     private void requireMemory( Requisition requisition){
@@ -57,31 +72,47 @@ public class MemoryManager {
                 finalBlockAdress = block.getFinalAdress();
 
             }
-            createMemoryBlock(finalBlockAdress, requisition.getMemoryRequired());
+
+            //tries to create a new memory block
+            boolean memoryBlockCreated = createMemoryBlock(finalBlockAdress, requisition.getMemoryRequired());
+
+            //if fails to create memory block and there is not fragmentation
+            if (!memoryBlockCreated){
+
+                if(!requisition.isPending()){
+                    requisition.setPending(true);
+                    pendingRequisitions.add(requisition);
+                }
+            } else { //pending requisition is created
+                if (requisition.isPending()){
+                    requisition.setPending(false);
+                    pendingRequisitions.remove(requisition);
+                }
+            }
         } else{
-            createMemoryBlock(this.initialAdress, requisition.getMemoryRequired());
 
+            //no previous blocks to check. creates new memory block.
+            createMemoryBlock(initialAdress,requisition.getMemoryRequired());
         }
-
-        //check for available size to create new block
-
-
-
 
     }
 
-    public void createMemoryBlock(int lastAdress, int memoryRequired){
+    public boolean createMemoryBlock(int lastAdress, int memoryRequired){
         int availableMemory = this.finalAdress - lastAdress;
         if (availableMemory >= memoryRequired){
             MemoryBlock mb = new MemoryBlock(memoryBlocks.size()+1, lastAdress, memoryRequired);
             mb.setAllocated(true);
             memoryBlocks.add(mb);
+            return true;
         } else {
-            System.out.println("External fragmentation!");
-            printMemoryblocks();
+            //Check for fragmentation
+            if (checkExternalFragmentation() >= memoryRequired) {
+                printMemoryblocks(memoryRequired);
+                System.exit(0);
+            }
 
         }
-
+        return false;
 
     }
 
@@ -105,12 +136,41 @@ public class MemoryManager {
         return null;
     }
 
-    private void printMemoryblocks(){
+    private void printMemoryblocks(int requisitionSize){
+        int lastMemoryAddress = 0;
         for (MemoryBlock mb: memoryBlocks
              ) {
             System.out.println(mb.toString());
-
+            lastMemoryAddress = mb.getFinalAdress();
         }
+
+        int freeMemory = finalAdress - lastMemoryAddress;
+
+        if (freeMemory > 0){
+            System.out.println(lastMemoryAddress + " - " + finalAdress + " livre " + "(tamanho " + (finalAdress - lastMemoryAddress) + ")");
+        }
+
+        int availableMemoryInBlocks = checkExternalFragmentation();
+        if (availableMemoryInBlocks > 0){
+            System.out.println();
+            System.out.println(availableMemoryInBlocks + " livres, " + requisitionSize + " solicitados - fragmentação externa." );
+        }
+    }
+
+    private int checkExternalFragmentation(){
+
+        int freeMemory = 0;
+        int finalAddress = 0;
+        for (MemoryBlock mb: memoryBlocks
+             ) {
+            if (!mb.isAllocated()){
+                freeMemory += mb.getBlockSize();
+            }
+            finalAddress = mb.getFinalAdress();
+        }
+        int availableMemory = this.finalAdress - finalAddress;
+        freeMemory += availableMemory;
+        return freeMemory;
     }
 
 }

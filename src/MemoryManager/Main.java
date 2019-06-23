@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        System.out.println("Hello world");
+        System.out.println("Bem vindo");
 
 
         ArrayList<Requisition> memoryAccessRequisitions = new ArrayList<Requisition>();
@@ -23,7 +23,7 @@ public class Main {
         File file = new File("src/"+ enter + ".txt");
         BufferedReader in = new BufferedReader(new FileReader(file));
 
-        System.out.println("Entrada lida");
+        //System.out.println("Entrada lida");
 
         //is always equal 1
         int memoryMode = Integer.parseInt(in.readLine());

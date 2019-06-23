@@ -58,6 +58,6 @@ public class MemoryBlock {
 
         }
         return initialAdress + " - " + finalAdress +
-               " " + blockID + "(tamanho " + blockSize + ")";
+               " " + blockID + " (tamanho " + blockSize + ")";
     }
 }
