@@ -27,7 +27,11 @@ public class MemoryBlock {
     }
 
     public int getBlockSize(){
-        return finalAdress - initialAdress;
+        return blockSize;
+    }
+
+    public void setBlockSize(int blockSize) {
+        this.blockSize = blockSize;
     }
 
     public int getFinalAdress() {
@@ -36,6 +40,18 @@ public class MemoryBlock {
 
     public void setUsedMemory(int usedMemory) {
         this.usedMemory = usedMemory;
+    }
+
+    public void setFinalAdress(int finalAdress) {
+        this.finalAdress = finalAdress;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getInitialAdress() {
+        return initialAdress;
     }
 
     public int getUsedMemory() {

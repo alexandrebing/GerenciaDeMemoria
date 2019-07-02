@@ -19,7 +19,8 @@ public class Main {
         System.out.println("Digite o nome do arquivo de entrada (sem extensão .txt)");
         String enter = s.nextLine();
         System.out.println();
-        System.out.println("====================================================================================");
+        System.out.println("********************************************************************************");
+        System.out.println();
         File file = new File("src/"+ enter + ".txt");
         BufferedReader in = new BufferedReader(new FileReader(file));
 
@@ -36,7 +37,7 @@ public class Main {
 
         String line;
 
-        int counter = 0;
+        int counter = 4;
 
         while ((line = in.readLine()) != null){
 
@@ -53,9 +54,9 @@ public class Main {
 
         // Run memory manager according to data
 
-        MemoryManager mr = new MemoryManager(memoryMode, initialAdress, finalAdress, memoryAccessRequisitions);
+        MemoryManager mm = new MemoryManager(memoryMode, initialAdress, finalAdress, memoryAccessRequisitions);
 
-        mr.run();
+        mm.run();
 
 
 

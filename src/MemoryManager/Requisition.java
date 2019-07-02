@@ -51,6 +51,10 @@ public class Requisition {
         this.pending = pending;
     }
 
+    public int getRequisitionID() {
+        return requisitionID;
+    }
+
     public boolean isPending() {
         return pending;
     }
